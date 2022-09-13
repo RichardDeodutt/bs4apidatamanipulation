@@ -5,10 +5,20 @@
 #This script is meant to gather data from a API and organize that data into a csv file using Python and Bash.
 #Issues
 
+#Subprocess to run bash scripts
+import subprocess
+
+#Neede to convert the api data to usable format
+import json
+
 #Yes or no Prompt
 def YNPromt(Prompt):
     #Get the user input
     UserInput=input(Prompt+" Y/N: ")
+    #If user just pressed enter and inputs nothing assume yes
+    if UserInput == "":
+        #Yes so return true
+        return True
     #Check if it starts with a 'y' if it does assume yes
     if UserInput[0].lower() == "y":
         #Yes so return true
@@ -69,9 +79,67 @@ def Exit():
     #Exit success
     exit(0)
 
+#Print RAW JSON data
+def PrintRAWJSON(JSON):
+    print(JSON)
+
+#Print JSON Data
+def PrintJSON(JSON):
+    #Print out all the keys and values from the JSON
+    for Item in JSON:
+        #Capitalize the keys and values unless it's a http link or number
+        if isinstance(JSON[Item], str) and 'http' not in JSON[Item]:
+            #Not a number or http link
+            print(Item.capitalize()+':', "'"+str(JSON[Item]).capitalize()+"'")
+        else:
+            #Number or contains 'http'
+            print(Item.capitalize()+':', "'"+str(JSON[Item])+"'")
+
+def SavetoBored(JSON):
+    pass
+
 #User is bored so get them a random activity suggestion
 def Bored():
-    pass
+    #Tell the user what we will do
+    print('Let me suggest a random activity you can do then!')
+    #Subprocess call to the bash script to get a random activity suggestion using a api and curl
+    ActivityData = subprocess.run(['./bored.sh'], capture_output=True, text=True).stdout
+    #Convert the string into a dictionary using json
+    ActivityJSON = json.loads(ActivityData)
+    #Print out the data for the user to see their random activity suggestion
+    print('Your Random Activity is as Follows: ')
+    #Print Activity
+    print('Activity:', ActivityJSON['activity'].capitalize()+'.')
+    #Print Type
+    print('Type:', ActivityJSON['type'].capitalize())
+    #Print Participants
+    print('Participants:', ActivityJSON['participants'])
+    #Print Price
+    print('Price:', str(round(ActivityJSON['price'] * 10, 1))+'/10')
+    #Print Accessibility
+    print('Accessibility:', str(round(ActivityJSON['accessibility'] * 10, 1))+'/10')
+    #Print Link if it's not blank
+    if ActivityJSON['link'] != "":
+        print('Link:', ActivityJSON['link'])
+    #Options on what to do with this data
+    Options = { "Print Data": PrintJSON, "Print Raw Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBored, "Go Back": None }
+    #Infinite Loop
+    while True:
+        #Space out text for clarity
+        print()
+        #Bored Menu
+        print('Bored Menu')
+        #Get the user selection
+        Selection = Pick('What would you like to do?', Options)
+        #User wants to go back
+        if Options[Selection] is None:
+            #Return back
+            return None
+        else:
+            #Space out text for clarity
+            print()
+            #Run the funtion the user selected and pass the JSON data
+            Options[Selection](ActivityJSON)
 
 #Main menu of options the user can do
 def Menu():
@@ -79,8 +147,14 @@ def Menu():
     Options = { "I'm Bored": Bored, "Exit": Exit }
     #Infinte Loop
     while True:
+        #Space out text for clarity
+        print()
+        #Main Menu
+        print('Main Menu')
         #Get the users selection
-        Selection = Pick('What woudld you like to do?', Options)
+        Selection = Pick('What would you like to do?', Options)
+        #Space out text for clarity
+        print()
         #Run the funtion the user selected
         Options[Selection]()
 
