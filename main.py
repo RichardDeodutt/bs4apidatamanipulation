@@ -3,6 +3,7 @@
 #Richard Deodutt
 #09/13/2022
 #This script is meant to gather data from a API and organize that data into a csv file using Python and Bash.
+#Requires curl and jq
 #Issues
 
 #Subprocess to run bash scripts
@@ -10,6 +11,9 @@ import subprocess
 
 #Neede to convert the api data to usable format
 import json
+
+#Exists function to check if a file exists already
+from os.path import exists
 
 #Yes or no Prompt
 def YNPromt(Prompt):
@@ -82,6 +86,8 @@ def Exit():
 #Print RAW JSON data
 def PrintRAWJSON(JSON):
     print(JSON)
+    #Return self
+    return PrintRAWJSON
 
 #Print JSON Data
 def PrintJSON(JSON):
@@ -94,35 +100,74 @@ def PrintJSON(JSON):
         else:
             #Number or contains 'http'
             print(Item.capitalize()+':', "'"+str(JSON[Item])+"'")
+    #Return self
+    return PrintJSON
 
-def SavetoBored(JSON):
-    pass
+#Save Bored JSON to CSV file
+def SavetoBoredCSV(JSON):
+    #Tell the user what we will do
+    print('Saving Bored Data to Bored.csv')
+    #Convert Bored JSON to CSV
+    CSVData = subprocess.run(['./csvbored.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
+    #If the file does not exist write to file with the headers
+    if not exists('bored.csv'):
+        #Append to the bored.csv file
+        with open('bored.csv', 'a') as File:
+            #Print the data being written
+            print(CSVData)
+            #Write with the headers to the file
+            File.write(CSVData)
+    else:
+        #File already exists append to bored.csv file only the data no header
+        with open('bored.csv', 'a') as File:
+            #Print only the data being written no header
+            print(CSVData.splitlines()[1])
+            #Write the data only no headers to file
+            File.write(CSVData.splitlines()[1]+'\n')
+    #Save completed
+    print('Saved Bored Data to Bored.csv')
+    #Return another function so this can't be called for the same data
+    #This is not the best or foolproof method to stop duplicate data but it's better than nothing
+    return AlreadySavedtoBoredCSV
+
+#Tell the user Bored JSON was saved to CSV file
+def AlreadySavedtoBoredCSV(JSON):
+    #Tell the user the bored data was already saved to csv
+    print('Already saved Bored data to Bored.csv')
+    #Return self
+    return AlreadySavedtoBoredCSV
+
+def PrintBoredJSON(JSON):
+    #Print Activity
+    print('Activity:', JSON['activity'].capitalize()+'.')
+    #Print Type
+    print('Type:', JSON['type'].capitalize())
+    #Print Participants
+    print('Participants:', JSON['participants'])
+    #Print Price
+    print('Price:', str(round(JSON['price'] * 10, 1))+'/10')
+    #Print Accessibility
+    print('Accessibility:', str(round(JSON['accessibility'] * 10, 1))+'/10')
+    #Print Link if it's not blank
+    if JSON['link'] != "":
+        print('Link:', JSON['link'])
+    #Return self
+    return PrintBoredJSON
 
 #User is bored so get them a random activity suggestion
 def Bored():
     #Tell the user what we will do
     print('Let me suggest a random activity you can do then!')
     #Subprocess call to the bash script to get a random activity suggestion using a api and curl
-    ActivityData = subprocess.run(['./bored.sh'], capture_output=True, text=True).stdout
+    ActivityData = subprocess.run(['./getbored.sh'], capture_output=True, text=True).stdout
     #Convert the string into a dictionary using json
     ActivityJSON = json.loads(ActivityData)
     #Print out the data for the user to see their random activity suggestion
     print('Your Random Activity is as Follows: ')
-    #Print Activity
-    print('Activity:', ActivityJSON['activity'].capitalize()+'.')
-    #Print Type
-    print('Type:', ActivityJSON['type'].capitalize())
-    #Print Participants
-    print('Participants:', ActivityJSON['participants'])
-    #Print Price
-    print('Price:', str(round(ActivityJSON['price'] * 10, 1))+'/10')
-    #Print Accessibility
-    print('Accessibility:', str(round(ActivityJSON['accessibility'] * 10, 1))+'/10')
-    #Print Link if it's not blank
-    if ActivityJSON['link'] != "":
-        print('Link:', ActivityJSON['link'])
+    #Print out bored api data
+    PrintBoredJSON(ActivityJSON)
     #Options on what to do with this data
-    Options = { "Print Data": PrintJSON, "Print Raw Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBored, "Go Back": None }
+    Options = { "Print Bored Data": PrintBoredJSON, "Print All Bored Data": PrintJSON, "Print Raw Bored Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBoredCSV, "Go Back": None }
     #Infinite Loop
     while True:
         #Space out text for clarity
@@ -133,13 +178,15 @@ def Bored():
         Selection = Pick('What would you like to do?', Options)
         #User wants to go back
         if Options[Selection] is None:
-            #Return back
-            return None
+            #Return back and return self
+            return Bored
         else:
             #Space out text for clarity
             print()
-            #Run the funtion the user selected and pass the JSON data
-            Options[Selection](ActivityJSON)
+            #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type
+            Replacement = Options[Selection](ActivityJSON)
+            #Replace the function with what it returned
+            Options[Selection] = Replacement
 
 #Main menu of options the user can do
 def Menu():
@@ -155,8 +202,10 @@ def Menu():
         Selection = Pick('What would you like to do?', Options)
         #Space out text for clarity
         print()
-        #Run the funtion the user selected
-        Options[Selection]()
+        #Run the funtion the user selected. returning a new function to replace it
+        Replacement = Options[Selection]()
+        #Replace the function with what it returned
+        Options[Selection] = Replacement
 
 #The main program
 def main():
