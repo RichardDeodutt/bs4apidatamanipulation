@@ -11,3 +11,11 @@ Url='http://www.boredapi.com/api/activity'
 
 #Curl the api sending output to stdout
 curl -s $Url
+
+if [ $? -ne 0 ]; then
+    #Exit error something was wrong with the curl command
+    exit 1
+fi
+
+#Exit success
+exit 0

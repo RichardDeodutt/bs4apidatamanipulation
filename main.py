@@ -103,12 +103,15 @@ def PrintJSON(JSON):
     #Return self
     return PrintJSON
 
+def CSVBored(JSON):
+    return subprocess.run(['./csvbored.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
+
 #Save Bored JSON to CSV file
 def SavetoBoredCSV(JSON):
     #Tell the user what we will do
     print('Saving Bored Data to Bored.csv')
     #Convert Bored JSON to CSV
-    CSVData = subprocess.run(['./csvbored.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
+    CSVData = CSVBored(JSON)
     #If the file does not exist write to file with the headers
     if not exists('bored.csv'):
         #Append to the bored.csv file
@@ -154,12 +157,15 @@ def PrintBoredJSON(JSON):
     #Return self
     return PrintBoredJSON
 
+def GetBored():
+    return subprocess.run(['./getbored.sh'], capture_output=True, text=True).stdout
+
 #User is bored so get them a random activity suggestion
 def Bored():
     #Tell the user what we will do
     print('Let me suggest a random activity you can do then!')
     #Subprocess call to the bash script to get a random activity suggestion using a api and curl
-    ActivityData = subprocess.run(['./getbored.sh'], capture_output=True, text=True).stdout
+    ActivityData = GetBored()
     #Convert the string into a dictionary using json
     ActivityJSON = json.loads(ActivityData)
     #Print out the data for the user to see their random activity suggestion
@@ -188,10 +194,15 @@ def Bored():
             #Replace the function with what it returned
             Options[Selection] = Replacement
 
+#Analayze a first name
+def FirstNameAnalyzer():
+    #Return self
+    return FirstNameAnalyzer
+
 #Main menu of options the user can do
 def Menu():
     #Dictionary of options where each entry is a funtion that can be run
-    Options = { "I'm Bored": Bored, "Exit": Exit }
+    Options = { "I'm Bored": Bored, "Analyze a First Name": FirstNameAnalyzer, "Exit": Exit }
     #Infinte Loop
     while True:
         #Space out text for clarity
@@ -214,5 +225,6 @@ def main():
     #Send the user to the main menu
     Menu()
 
-#Calls the main program
-main()
+#Calls the main program if this script is run directly
+if __name__ == "__main__":
+    main()
