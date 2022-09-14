@@ -27,3 +27,26 @@ Take away: After creating your script, you will have the ability to access data 
 #Description
 #Instructions and Issues
 ```
+
+# Notes
+
+`getbored` can be piped to `csvbored.sh`
+
+Example:
+
+`./getbored.sh | ./csvbored.sh`
+
+`main.py` is the interactive CLI
+
+# Dependencies:
+
+1. [Python](https://www.python.org/)
+2. [Bash](https://www.gnu.org/software/bash/)
+4. [cURL](https://curl.se/)
+3. [jq](https://stedolan.github.io/jq/)
+
+# Python Modules:
+
+1. [subprocess](https://docs.python.org/3/library/subprocess.html)
+2. [json](https://docs.python.org/3/library/json.html)
+3. [os](https://docs.python.org/3/library/os.html)
