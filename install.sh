@@ -24,7 +24,7 @@ apt-get update
 apt-get install python3 -y && echo "Python3 is Installed" >> $Log && apt-get install python3-pip -y && echo "Python pip is Installed" >> $Log && apt-get install python3.10-venv -y && echo "Python venv is Installed" >> Log && apt-get install git -y && echo "Git is Installed" >> $Log
 
 #Install curl and jq if it not installed
-apt-get curl -y && echo "Curl is Installed" >> $Log && apt-get install jq -y && echo "Jq is Installed" >> $Log
+apt-get install curl -y && echo "Curl is Installed" >> $Log && apt-get install jq -y && echo "Jq is Installed" >> $Log
 
 #Install pip venv enviormentent
 python3 -m venv $Pathofvenv && echo "Python venv Directory is Installed" >> $Log
