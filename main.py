@@ -111,23 +111,78 @@ def JSONtoCSV(JSON):
     #Run the bash script and capture the output and return it, bash script takes in a JSON string
     return subprocess.run(['./jsontocsv.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
 
+#Format the bored data to be more pretty
+def PrettyBored(OriginalJSON):
+    #Make a Copy of the JSON so we don't edit the original
+    JSONData = OriginalJSON.copy()
+    #Capitilize Activity
+    JSONData['Activity'] = JSONData.pop('activity')
+    #Capitilize value
+    JSONData["Activity"] = JSONData["Activity"].capitalize()+'.'
+    #Capitilize Type
+    JSONData['Type'] = JSONData.pop('type')
+    #Capitilize value
+    JSONData["Type"] = JSONData["Type"].capitalize()
+    #Capitilize Participants
+    JSONData['Participants'] = JSONData.pop('participants')
+    #Capitilize Price
+    JSONData['Price-Rating'] = JSONData.pop('price')
+    #Convert to a rating out of 10, where higher is more costly
+    JSONData['Price-Rating'] = str(round(JSONData['Price-Rating'] * 10, 1))+'/10'
+    #Capitilize Accessibility and change it to Inaccessibility as it makes more sense
+    JSONData['Inaccessibility-Rating'] = JSONData.pop('accessibility')
+    #Convert to a rating out of 10, where higher is more inaccessibility
+    JSONData['Inaccessibility-Rating'] = str(round(JSONData['Inaccessibility-Rating'] * 10, 1))+'/10'
+    #Capitilize Link
+    JSONData['Link'] = JSONData.pop('link')
+    return JSONData
+
+#Print the formatted and trimmed random activity data
+def PrettyPrintBoredJSON(OriginalJSON):
+    #Convert Name to a pretty version
+    JSONData = PrettyBored(OriginalJSON)
+    #Print Activity
+    print('Activity:', JSONData['Activity'])
+    #Print Type
+    print('Type:', JSONData['Type'])
+    #Print Participants
+    print('Participants:', JSONData['Participants'])
+    #Print Price-Rating
+    print('Price-Rating:', JSONData['Price-Rating'])
+    #Print Inaccessibility-Rating
+    print('Inaccessibility-Rating:', JSONData['Inaccessibility-Rating'])
+    #Print Link if it's not blank
+    if JSONData['Link'] != "":
+        print('Link:', JSONData['Link'])
+    #Return self
+    return PrettyPrintBoredJSON
+
+#Tell the user Bored JSON was saved to CSV file
+def AlreadySavedData(OriginalJSON):
+    #Tell the user the bored data was already saved to csv
+    print('Already saved data')
+    #Return self
+    return AlreadySavedData
+
 #Save Bored JSON to CSV file
-def SavetoBoredCSV(JSON):
+def SavetoBoredCSV(OriginalJSON):
     #Tell the user what we will do
     print('Saving Bored Data to Bored.csv')
+    #Convert Bored to a pretty version
+    JSONData = PrettyBored(OriginalJSON)
     #Convert Bored JSON to CSV
-    CSVData = JSONtoCSV(JSON)
+    CSVData = JSONtoCSV(JSONData)
     #If the file does not exist write to file with the headers
-    if not exists('bored.csv'):
-        #Append to the bored.csv file
-        with open('bored.csv', 'a') as File:
+    if not exists('Bored.csv'):
+        #Append to the Bored.csv file
+        with open('Bored.csv', 'a') as File:
             #Print the data being written
-            print(CSVData)
+            print(CSVData, end ="")
             #Write with the headers to the file
             File.write(CSVData)
     else:
-        #File already exists append to bored.csv file only the data no header
-        with open('bored.csv', 'a') as File:
+        #File already exists append to Bored.csv file only the data no header
+        with open('Bored.csv', 'a') as File:
             #Print only the data being written no header
             print(CSVData.splitlines()[1])
             #Write the data only no headers to file
@@ -136,32 +191,7 @@ def SavetoBoredCSV(JSON):
     print('Saved Bored Data to Bored.csv')
     #Return another function so this can't be called for the same data
     #This is not the best or foolproof method to stop duplicate data but it's better than nothing
-    return AlreadySavedtoBoredCSV
-
-#Tell the user Bored JSON was saved to CSV file
-def AlreadySavedtoBoredCSV(JSON):
-    #Tell the user the bored data was already saved to csv
-    print('Already saved Bored data to Bored.csv')
-    #Return self
-    return AlreadySavedtoBoredCSV
-
-#Print the formatted and trimmed random activity data
-def PrettyPrintBoredJSON(JSON):
-    #Print Activity
-    print('Activity:', JSON['activity'].capitalize()+'.')
-    #Print Type
-    print('Type:', JSON['type'].capitalize())
-    #Print Participants
-    print('Participants:', JSON['participants'])
-    #Print Price
-    print('Price:', str(round(JSON['price'] * 10, 1))+'/10')
-    #Print Accessibility
-    print('Accessibility:', str(round(JSON['accessibility'] * 10, 1))+'/10')
-    #Print Link if it's not blank
-    if JSON['link'] != "":
-        print('Link:', JSON['link'])
-    #Return self
-    return PrettyPrintBoredJSON
+    return AlreadySavedData
 
 #Use subprocess to run a bash script to use the bored api
 def GetBored():
@@ -212,13 +242,13 @@ def GetAge(Firstname):
     #Run the bash script and capture the output and return it
     return subprocess.run(['./getage.sh', Firstname], capture_output=True, text=True).stdout
 
-#Get most likely nationalitys from a first name using nationalize api
-def GetNationalitys(Firstname):
+#Get most likely Nationalities from a first name using nationalize api
+def GetNationalities(Firstname):
     #Run the bash script and capture the output and return it
     return subprocess.run(['./getnationality.sh', Firstname], capture_output=True, text=True).stdout
 
 #Concatenate the data on first names into one JSON string
-def ConcatenateNameData(Gender, Age, Nationalitys):
+def ConcatenateNameData(Gender, Age, Nationalities):
     #Dictionary containing the final result
     ConcatenatedNameData = {}
     #Changing the name so it won't conflict when merged
@@ -232,34 +262,42 @@ def ConcatenateNameData(Gender, Age, Nationalitys):
     #Convert from JSON string to Dict
     Age = json.loads(Age)
     #Convert from JSON string to Dict
-    Nationalitys = json.loads(Nationalitys)
+    Nationalities = json.loads(Nationalities)
     #Merge dict to final result dict
     ConcatenatedNameData.update(Gender)
     #Merge dict to final result dict
     ConcatenatedNameData.update(Age)
     #Merge dict to final result dict
-    ConcatenatedNameData.update(Nationalitys)
+    ConcatenatedNameData.update(Nationalities)
     #return merged final result
     return ConcatenatedNameData
 
-#Pretty Print the formatted and trimmed name data
-def PrettyPrintNameJSON(JSON):
-    #Print Name
-    print('Name:', JSON['name'].capitalize())
-    #Print Type
-    print('Gender:', JSON['gender'].capitalize())
-    #Print Gender-Probability
-    print('Gender-Probability:', str(round(JSON["gender-probability"] * 100, 2)) + "%")
-    #Print Gender-Sample-Count
-    print('Gender-Sample-Count:', JSON['gender-sample-count'])
-    #Print Age
-    print('Age:', JSON['age'])
+#Format the name data to be more pretty
+def PrettyName(OriginalJSON):
+    #Make a Copy of the JSON so we don't edit the original
+    JSONData = OriginalJSON.copy()
+    #Capitilize name
+    JSONData['Name'] = JSONData.pop('name')
+    #Capitilize value
+    JSONData["Name"] = JSONData["Name"].capitalize()
+    #Capitilize Gender
+    JSONData['Gender'] = JSONData.pop('gender')
+    #Capitilize value
+    JSONData["Gender"] = JSONData["Gender"].capitalize()
+    #Capitilize Gender-Probability
+    JSONData['Gender-Probability'] = JSONData.pop('gender-probability')
+    #Convert probability to percent
+    JSONData['Gender-Probability'] = str(round(JSONData["Gender-Probability"] * 100, 2)) + "%"
+    #Capitilize Gender-Sample-Count
+    JSONData['Gender-Sample-Count'] = JSONData.pop('gender-sample-count')
+    #Capitilize Age
+    JSONData['Age'] = JSONData.pop('age')
     #Print Age-Sample-Count
-    print('Age-Sample-Count:', JSON['age-sample-count'])
+    JSONData['Age-Sample-Count'] = JSONData.pop('age-sample-count')
     #Empty String to store the country probabilities
     CountryString = ""
     #The list of countries
-    CountryList = JSON["country"]
+    CountryList = JSONData["country"]
     #Go through every country in the list
     for CountryData in CountryList:
         #From the country code get the country
@@ -268,17 +306,67 @@ def PrettyPrintNameJSON(JSON):
         Probability = round(CountryData["probability"] * 100, 2)
         #Join the two into a string and add it to the CountryString
         if CountryString == "":
-            #If the string is empty just add it without a comma
+            #If the string is empty just add it without a dash
             CountryString += Country + " = " + str(Probability) + "%"
         else:
-            #If the string is not empty add it with a comma at the start to seperate it
-            CountryString += ", " + Country + " = " + str(Probability) + "%"
-    #Print Nationalitys if we found some
-    if CountryString != "":
+            #If the string is not empty add it with a dash at the start to seperate it
+            CountryString += " - " + Country + " = " + str(Probability) + "%"
+    #Change country to Most Likely Nationalities and Chances
+    JSONData['Most Likely Nationalities and Probabilities'] = JSONData.pop('country')
+    JSONData['Most Likely Nationalities and Probabilities'] = CountryString
+    return JSONData
+
+#Save Name JSON to CSV file
+def SavetoNameCSV(OriginalJSON):
+    #Tell the user what we will do
+    print('Saving Name Data to Name.csv')
+    #Convert Name to a pretty version
+    JSONData = PrettyName(OriginalJSON)
+    #Convert Name JSON to CSV
+    CSVData = JSONtoCSV(JSONData)
+    #If the file does not exist write to file with the headers
+    if not exists('Name.csv'):
+        #Append to the bored.csv file
+        with open('Name.csv', 'a') as File:
+            #Print the data being written
+            print(CSVData, end ="")
+            #Write with the headers to the file
+            File.write(CSVData)
+    else:
+        #File already exists append to bored.csv file only the data no header
+        with open('Name.csv', 'a') as File:
+            #Print only the data being written no header
+            print(CSVData.splitlines()[1])
+            #Write the data only no headers to file
+            File.write(CSVData.splitlines()[1]+'\n')
+    #Save completed
+    print('Saved Name Data to Name.csv')
+    #Return another function so this can't be called for the same data
+    #This is not the best or foolproof method to stop duplicate data but it's better than nothing
+    return AlreadySavedData
+
+#Pretty Print the formatted and trimmed name data
+def PrettyPrintNameJSON(OriginalJSON):
+    #Convert Name to a pretty version
+    JSONData = PrettyName(OriginalJSON)
+    #Print Name
+    print('Name:', JSONData['Name'])
+    #Print Gender
+    print('Gender:', JSONData['Gender'])
+    #Print Gender-Probability
+    print('Gender-Probability:', JSONData['Gender-Probability'])
+    #Print Gender-Sample-Count
+    print('Gender-Sample-Count:', JSONData['Gender-Sample-Count'])
+    #Print Age
+    print('Age:', JSONData['Age'])
+    #Print Age-Sample-Count
+    print('Age-Sample-Count:', JSONData['Age-Sample-Count'])
+    #Print Nationalities if we found some
+    if JSONData['Most Likely Nationalities and Probabilities'] != "":
         #Found some so print it
-        print('Most Likely Nationalitys and Chances:', CountryString)
+        print('Most Likely Nationalities and Chances:', JSONData['Most Likely Nationalities and Probabilities'])
     #Return self
-    return PrettyPrintBoredJSON
+    return PrettyPrintNameJSON
 
 #Analayze a first name
 def FirstNameAnalyzer():
@@ -293,16 +381,16 @@ def FirstNameAnalyzer():
         Gender = GetGender(Firstname)
         #Get the predicted age
         Age = GetAge(Firstname)
-        #Get the predicted nationalitys
-        Nationalitys = GetNationalitys(Firstname)
+        #Get the predicted nationalities
+        Nationalities = GetNationalities(Firstname)
         #Concatenate the data on first names into one
-        ConcatenatedNameDataJSON = ConcatenateNameData(Gender, Age, Nationalitys)
+        ConcatenatedNameDataJSON = ConcatenateNameData(Gender, Age, Nationalities)
         #Print out the data for the user to see their random activity suggestion
         print('Your Analyzed First Name is as Follows: ')
         #Print out concatenated first name data
         PrettyPrintNameJSON(ConcatenatedNameDataJSON)
         #Options on what to do with this data
-        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print All Name Data": None, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': None, "Go Back": None }
+        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': SavetoNameCSV, "Go Back": None }
         #Infinite Loop
         while True:
             #Space out text for clarity
