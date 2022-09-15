@@ -2,7 +2,7 @@
 
 #Richard Deodutt
 #09/13/2022
-#This script is meant to gather data from a API and organize that data into a csv file using Python and Bash.
+#This script is meant to gather data from a API and organize that data into a csv file using Python and Bash. This is the CLI.
 #Requires curl and jq
 #Issues
 
@@ -73,7 +73,7 @@ def Pick(Prompt, Options):
 #Welcome the user and get some information from them if needed
 def Welcome():
     #Welcome message, API Data Manipulation
-    print("Welcome to a ADM")
+    print("Welcome to a ADM - API Data Manipulation")
     return None
 
 #Exits the program
@@ -227,10 +227,8 @@ def Bored():
         else:
             #Space out text for clarity
             print()
-            #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type
-            Replacement = Options[Selection](ActivityJSON)
-            #Replace the function with what it returned
-            Options[Selection] = Replacement
+            #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type, Replace the function with what it returned
+            Options[Selection] = Options[Selection](ActivityJSON)
 
 #Get most likely gender from a first name using genderize api
 def GetGender(Firstname):
@@ -406,10 +404,8 @@ def FirstNameAnalyzer():
             else:
                 #Space out text for clarity
                 print()
-                #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type
-                Replacement = Options[Selection](ConcatenatedNameDataJSON)
-                #Replace the function with what it returned
-                Options[Selection] = Replacement
+                #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type, Replace the function with what it returned
+                Options[Selection] = Options[Selection](ConcatenatedNameDataJSON)
 
 #Main menu of options the user can do
 def Menu():
@@ -425,10 +421,8 @@ def Menu():
         Selection = Pick('What would you like to do?', Options)
         #Space out text for clarity
         print()
-        #Run the funtion the user selected. returning a new function to replace it
-        Replacement = Options[Selection]()
-        #Replace the function with what it returned
-        Options[Selection] = Replacement
+        #Run the funtion the user selected. returning a new function to replace it, Replace the function with what it returned
+        Options[Selection] = Options[Selection]()
 
 #The main program
 def main():
