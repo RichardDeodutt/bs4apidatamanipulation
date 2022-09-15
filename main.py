@@ -135,6 +135,8 @@ def PrettyBored(OriginalJSON):
     JSONData['Inaccessibility-Rating'] = str(round(JSONData['Inaccessibility-Rating'] * 10, 1))+'/10'
     #Capitilize Link
     JSONData['Link'] = JSONData.pop('link')
+    #Capitilize Key
+    JSONData['Key'] = JSONData.pop('key')
     return JSONData
 
 #Print the formatted and trimmed random activity data
@@ -281,7 +283,10 @@ def PrettyName(OriginalJSON):
     #Capitilize Gender
     JSONData['Gender'] = JSONData.pop('gender')
     #Capitilize value
-    JSONData["Gender"] = JSONData["Gender"].capitalize()
+    if JSONData["Gender"] is not None:
+        JSONData["Gender"] = JSONData["Gender"].capitalize()
+    else:
+        JSONData["Gender"] = "Unknown"
     #Capitilize Gender-Probability
     JSONData['Gender-Probability'] = JSONData.pop('gender-probability')
     #Convert probability to percent
