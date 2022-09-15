@@ -42,9 +42,9 @@ I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnat
 
 # Todo
 
-6. Condense the 3 Bash Scripts(Optional)
-7. Add more APIs(Optional)
-8. More Documentation(Optional)
+1. Condense the 3 Bash Scripts(Optional)
+2. Add more APIs(Optional)
+3. More Documentation(Optional)
 
 # Dependencies:
 
