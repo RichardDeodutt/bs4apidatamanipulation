@@ -73,7 +73,7 @@ def Pick(Prompt, Options):
 #Welcome the user and get some information from them if needed
 def Welcome():
     #Welcome message, API Data Manipulation
-    print("Welcome to a ADM - API Data Manipulation")
+    print("Welcome to ADM - API Data Manipulation")
     return None
 
 #Exits the program
