@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Richard Deodutt
-#08/15/2022
+#09/13/2022
 #This script is meant to gather data from a API that suggests random activities for bored people.
 #Requires curl
 #Issues

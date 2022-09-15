@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #Richard Deodutt
-#08/15/2022
-#This script is meant to save gathered data from a API that suggests random activities for bored people into a csv file.
-#Requires jq
+#09/14/2022
+#This script is meant to gather data from a API that predicts the most probable age using a first name
+#Requires curl
 #Issues
 
-#First argument is the json data to save, overrides pipe if it's set
+#First argument is the first name to use, overrides pipe if it's set
 if [ -n "$1" ]; then
     #Argument was passed so use that
     Data=$1
@@ -22,8 +22,16 @@ else
     fi
 fi
 
-#Use jq to convert the data from JSON to CSV
-echo "$Data" | jq -r '. as $Data | . | keys_unsorted as $UKeys | $UKeys as $Colums | map($Data as $Row | $Colums | map($Row[.])) as $Rows | $Colums, $Rows[1] | @csv'
+#Url for the api to get a random activity suggestion
+Url="https://api.agify.io?name=$Data"
+
+#Curl the api sending output to stdout
+curl -s $Url
+
+if [ $? -ne 0 ]; then
+    #Exit error something was wrong with the curl command
+    exit 1
+fi
 
 #Exit success
 exit 0
