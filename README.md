@@ -42,11 +42,6 @@ I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnat
 
 # Todo
 
-1. Flask App(Html,CSS,Javascript)(Bootstrap)
-2. Install Script
-3. Run Script
-4. Systemd Service Script
-5. Deployment Script
 6. Condense the 3 Bash Scripts(Optional)
 7. Add more APIs(Optional)
 8. More Documentation(Optional)
