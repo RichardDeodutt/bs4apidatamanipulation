@@ -40,6 +40,17 @@ Example:
 
 I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnationality`. This is because I want them to be their own individual scripts that can run individually without having to put in the url as a parameter. I suppose I could make them take in a `-g` for gender, `-a` for age, `-n` for nationality and default to `-g` but that may take some time to figure out so I'll leave that for last if I have time. 
 
+# Todo
+
+1. Flask App(Html,CSS,Javascript)(Bootstrap)
+2. Install Script
+3. Run Script
+4. Systemd Service Script
+5. Deployment Script
+6. Condense the 3 Bash Scripts(Optional)
+7. Add more APIs(Optional)
+8. More Documentation(Optional)
+
 # Dependencies:
 
 1. [Python](https://www.python.org/)
