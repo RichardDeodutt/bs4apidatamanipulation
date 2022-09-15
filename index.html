@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API Data Manipulation</title>
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <link href="static/style.css" rel="stylesheet">
+  </head>
+  <body class="bg-darkmode">
+    <div id="main" class="main">
+      <div id="title" class="d-flex justify-content-center mt-5">
+        <h1 class="text-title notextselect d-flex justify-content-center mt-2">Welcome to ADM</h1>
+      </div>
+      <div id="title" class="d-flex justify-content-center mt-5">
+        <h1 class="text-title notextselect d-flex justify-content-center mt-2">API Data Manipulation</h1>
+      </div>
+      <div id="apibuttons" class="d-flex justify-content-center mt-5">
+        <button id="boredbuttons" type="button" class="btn btn-dark text-maincolor big-button mx-3 p-3" onclick="ClickedBored();return false;" >I'm Bored</button>
+        <span class="input-group-text notextselect namelabel" id="name">Name >></span>
+        <input id="nameinput" type="text" class="form-control nameinputbox" placeholder="Enter Name Here" aria-label="Enter Name Here">
+        <button id="namebuttons" type="button" class="btn btn-dark text-maincolor big-button mx-3 p-3" onclick="ClickedName();return false;" >Analyze a First Name</button>
+      </div>
+      <div id="data" class="data">
+        <div id="prettydata" class="d-flex justify-content-center mt-5">
+          <span class="jsonlabel" id="name">{"activity":"Write a list of things you are grateful for","type":"relaxation","participants":1,"price":0,"link":"","key":"2062010","accessibility":0}</span>
+        </div>
+        </div>
+        <div id="downloadbuttons" class="d-flex justify-content-center mt-5">
+        <button id="jsonbuttons" type="button" class="btn btn-dark text-maincolor big-button mx-3 p-3" onclick="ClickedDownloadJSON();return false;" >Download JSON</button>
+        <button id="csvbuttons" type="button" class="btn btn-dark text-maincolor big-button mx-3 p-3" onclick="ClickedDownloadCSV();return false;" >Download CSV</button>
+      </div>
+    </div>
+
+    <script src="static/bootstrap.bundle.min.js"></script>
+    <script src="static/script.js"></script>
+  </body>
+</html>

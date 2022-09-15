@@ -1,0 +1,80 @@
+.notextselect {
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+		 -moz-user-select: none;
+		  -ms-user-select: none;
+			  user-select: none;
+}
+
+body{
+	font-family: monospace;
+}
+
+.main{
+	position: fixed;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	box-sizing: unset;
+}
+
+.bg-darkmode {
+	background-color: #202020 !important;
+}
+
+.text-maincolor {
+	color: #a04aff !important;
+}
+
+@keyframes title {
+    0%   {color: #a04aff;}
+    50%  {color: #3c0080;}
+    100% {color: #a04aff;}
+  }
+
+.text-title {
+	color: #a04aff;
+	font-size: 7vh;
+    animation-name: title;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+.big-button {
+	font-size: 3vh;
+}
+
+.nameinputbox {
+	color: #a04aff;
+	font-size: 3vh;
+	width: 30vh;
+	border: 5px solid #a04aff;
+	background-color: transparent !important;
+	
+}
+
+.namelabel{
+	color: #a04aff;
+	font-size: 3vh;
+	border: none !important;
+	background-color: transparent !important;
+}
+
+.jsonlabel{
+	color: #a04aff;
+	font-size: 3vh;
+	border: none !important;
+	background-color: transparent !important;
+	word-break: break-word;
+}
+
+.nameinputbox:focus {
+	color: #a04aff;
+	background-color: transparent !important;
+}
+
+.data {
+	zdisplay: none;
+}

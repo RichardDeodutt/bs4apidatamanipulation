@@ -11,6 +11,9 @@ from flask import Flask, send_file, jsonify, request
 #Import the main.py CLI
 import main
 
+#Import json for working with JSON
+import json
+
 #Flask app name
 app = Flask(__name__)
 
@@ -34,7 +37,7 @@ def getbored():
     #Convert the json to a pretty json
     PrettyJSON = main.PrettyBored(BoredJSON)
     #Return the pretty json
-    return send_file(json.dumps(PrettyJSON))
+    return json.dumps(PrettyJSON)
 
 #Calls the name function to query the name apis for data
 @app.route('/name/<name>', methods=['GET'])
@@ -44,7 +47,7 @@ def getname(name):
     #Convert the json to a pretty json
     PrettyJSON = main.PrettyName(NameJSON)
     #Return the pretty json
-    return send_file(json.dumps(PrettyJSON))
+    return json.dumps(PrettyJSON)
 
 #Home page at the root
 @app.route('/', methods=['GET'])
