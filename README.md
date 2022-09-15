@@ -38,6 +38,8 @@ Example:
 
 `main.py` is the interactive CLI
 
+I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnationality`. This is because I want them to be their own individual scripts that can run individually without having to put in the url as a parameter. I suppose I could make them take in a `-g` for gender, `-a` for age, `-n` for nationality and default to `-g` but that may take some time to figure out so I'll leave that for last if I have time. 
+
 # Dependencies:
 
 1. [Python](https://www.python.org/)
