@@ -15,6 +15,9 @@ import json
 #Exists function to check if a file exists already
 from os.path import exists
 
+#Convert country codes to country names
+from pycountry import countries
+
 #Yes or no Prompt
 def YNPromt(Prompt):
     #Get the user input
@@ -90,7 +93,7 @@ def PrintRAWJSON(JSON):
     return PrintRAWJSON
 
 #Print JSON Data
-def PrintJSON(JSON):
+def PrintBoredRAWJSON(JSON):
     #Print out all the keys and values from the JSON
     for Item in JSON:
         #Capitalize the keys and values unless it's a http link or number
@@ -101,17 +104,19 @@ def PrintJSON(JSON):
             #Number or contains 'http'
             print(Item.capitalize()+':', "'"+str(JSON[Item])+"'")
     #Return self
-    return PrintJSON
+    return PrintBoredRAWJSON
 
-def CSVBored(JSON):
-    return subprocess.run(['./csvbored.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
+#Use subprocess to run a bash script to convert the json to csv
+def JSONtoCSV(JSON):
+    #Run the bash script and capture the output and return it, bash script takes in a JSON string
+    return subprocess.run(['./jsontocsv.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
 
 #Save Bored JSON to CSV file
 def SavetoBoredCSV(JSON):
     #Tell the user what we will do
     print('Saving Bored Data to Bored.csv')
     #Convert Bored JSON to CSV
-    CSVData = CSVBored(JSON)
+    CSVData = JSONtoCSV(JSON)
     #If the file does not exist write to file with the headers
     if not exists('bored.csv'):
         #Append to the bored.csv file
@@ -140,7 +145,8 @@ def AlreadySavedtoBoredCSV(JSON):
     #Return self
     return AlreadySavedtoBoredCSV
 
-def PrintBoredJSON(JSON):
+#Print the formatted and trimmed random activity data
+def PrettyPrintBoredJSON(JSON):
     #Print Activity
     print('Activity:', JSON['activity'].capitalize()+'.')
     #Print Type
@@ -155,9 +161,11 @@ def PrintBoredJSON(JSON):
     if JSON['link'] != "":
         print('Link:', JSON['link'])
     #Return self
-    return PrintBoredJSON
+    return PrettyPrintBoredJSON
 
+#Use subprocess to run a bash script to use the bored api
 def GetBored():
+    #Run the bash script and capture the output and return it
     return subprocess.run(['./getbored.sh'], capture_output=True, text=True).stdout
 
 #User is bored so get them a random activity suggestion
@@ -171,9 +179,9 @@ def Bored():
     #Print out the data for the user to see their random activity suggestion
     print('Your Random Activity is as Follows: ')
     #Print out bored api data
-    PrintBoredJSON(ActivityJSON)
+    PrettyPrintBoredJSON(ActivityJSON)
     #Options on what to do with this data
-    Options = { "Print Bored Data": PrintBoredJSON, "Print All Bored Data": PrintJSON, "Print Raw Bored Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBoredCSV, "Go Back": None }
+    Options = { "Pretty Print Bored Data": PrettyPrintBoredJSON, "Print All Bored Data": PrintBoredRAWJSON, "Print Raw JSON Bored Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBoredCSV, "Go Back": None }
     #Infinite Loop
     while True:
         #Space out text for clarity
@@ -194,10 +202,126 @@ def Bored():
             #Replace the function with what it returned
             Options[Selection] = Replacement
 
+#Get most likely gender from a first name using genderize api
+def GetGender(Firstname):
+    #Run the bash script and capture the output and return it
+    return subprocess.run(['./getgender.sh', Firstname], capture_output=True, text=True).stdout
+
+#Get most likely age from a first name using agify api
+def GetAge(Firstname):
+    #Run the bash script and capture the output and return it
+    return subprocess.run(['./getage.sh', Firstname], capture_output=True, text=True).stdout
+
+#Get most likely nationalitys from a first name using nationalize api
+def GetNationalitys(Firstname):
+    #Run the bash script and capture the output and return it
+    return subprocess.run(['./getnationality.sh', Firstname], capture_output=True, text=True).stdout
+
+#Concatenate the data on first names into one JSON string
+def ConcatenateNameData(Gender, Age, Nationalitys):
+    #Dictionary containing the final result
+    ConcatenatedNameData = {}
+    #Changing the name so it won't conflict when merged
+    Gender = Gender.replace("probability","gender-probability")
+    #Changing the name so it won't conflict when merged and is more descriptive
+    Gender = Gender.replace("count","gender-sample-count")
+    #Changing the name so it won't conflict when merged and is more descriptive
+    Age = Age.replace("count","age-sample-count")
+    #Convert from JSON string to Dict
+    Gender = json.loads(Gender)
+    #Convert from JSON string to Dict
+    Age = json.loads(Age)
+    #Convert from JSON string to Dict
+    Nationalitys = json.loads(Nationalitys)
+    #Merge dict to final result dict
+    ConcatenatedNameData.update(Gender)
+    #Merge dict to final result dict
+    ConcatenatedNameData.update(Age)
+    #Merge dict to final result dict
+    ConcatenatedNameData.update(Nationalitys)
+    #return merged final result
+    return ConcatenatedNameData
+
+#Pretty Print the formatted and trimmed name data
+def PrettyPrintNameJSON(JSON):
+    #Print Name
+    print('Name:', JSON['name'].capitalize())
+    #Print Type
+    print('Gender:', JSON['gender'].capitalize())
+    #Print Gender-Probability
+    print('Gender-Probability:', str(round(JSON["gender-probability"] * 100, 2)) + "%")
+    #Print Gender-Sample-Count
+    print('Gender-Sample-Count:', JSON['gender-sample-count'])
+    #Print Age
+    print('Age:', JSON['age'])
+    #Print Age-Sample-Count
+    print('Age-Sample-Count:', JSON['age-sample-count'])
+    #Empty String to store the country probabilities
+    CountryString = ""
+    #The list of countries
+    CountryList = JSON["country"]
+    #Go through every country in the list
+    for CountryData in CountryList:
+        #From the country code get the country
+        Country = countries.get(alpha_2=CountryData["country_id"]).name
+        #Convert the probability to a percentage
+        Probability = round(CountryData["probability"] * 100, 2)
+        #Join the two into a string and add it to the CountryString
+        if CountryString == "":
+            #If the string is empty just add it without a comma
+            CountryString += Country + " = " + str(Probability) + "%"
+        else:
+            #If the string is not empty add it with a comma at the start to seperate it
+            CountryString += ", " + Country + " = " + str(Probability) + "%"
+    #Print Nationalitys if we found some
+    if CountryString != "":
+        #Found some so print it
+        print('Most Likely Nationalitys and Chances:', CountryString)
+    #Return self
+    return PrettyPrintBoredJSON
+
 #Analayze a first name
 def FirstNameAnalyzer():
-    #Return self
-    return FirstNameAnalyzer
+    #Ask for user input
+    Firstname = input("Enter a first name to analyze (Only letters): ")
+    #Don't accept blank input or non letter characters in the input
+    if Firstname == "" or not all(Character.isalpha() for Character in Firstname):
+        #Name is not valid so tell user
+        print("This first name is not valid, can't continue")
+    else:
+        #Get the predicted gender
+        Gender = GetGender(Firstname)
+        #Get the predicted age
+        Age = GetAge(Firstname)
+        #Get the predicted nationalitys
+        Nationalitys = GetNationalitys(Firstname)
+        #Concatenate the data on first names into one
+        ConcatenatedNameDataJSON = ConcatenateNameData(Gender, Age, Nationalitys)
+        #Print out the data for the user to see their random activity suggestion
+        print('Your Analyzed First Name is as Follows: ')
+        #Print out concatenated first name data
+        PrettyPrintNameJSON(ConcatenatedNameDataJSON)
+        #Options on what to do with this data
+        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print All Name Data": None, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': None, "Go Back": None }
+        #Infinite Loop
+        while True:
+            #Space out text for clarity
+            print()
+            #Bored Menu
+            print('Name Menu')
+            #Get the user selection
+            Selection = Pick('What would you like to do?', Options)
+            #User wants to go back
+            if Options[Selection] is None:
+                #Return back and return self
+                return FirstNameAnalyzer
+            else:
+                #Space out text for clarity
+                print()
+                #Run the funtion the user selected and pass the JSON data. returning a new function to replace it or with the None type
+                Replacement = Options[Selection](ConcatenatedNameDataJSON)
+                #Replace the function with what it returned
+                Options[Selection] = Replacement
 
 #Main menu of options the user can do
 def Menu():
