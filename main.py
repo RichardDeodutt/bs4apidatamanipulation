@@ -390,7 +390,7 @@ def FirstNameAnalyzer():
         #Print out concatenated first name data
         PrettyPrintNameJSON(ConcatenatedNameDataJSON)
         #Options on what to do with this data
-        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': SavetoNameCSV, "Go Back": None }
+        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print All Name Data": PrintBoredRAWJSON, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': SavetoNameCSV, "Go Back": None }
         #Infinite Loop
         while True:
             #Space out text for clarity
