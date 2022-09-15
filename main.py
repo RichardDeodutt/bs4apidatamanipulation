@@ -366,6 +366,19 @@ def PrettyPrintNameJSON(OriginalJSON):
     #Return self
     return PrettyPrintNameJSON
 
+#Get all the first name data from the api and concatenate it
+def GetName(Firstname):
+    #Get the predicted gender
+    Gender = GetGender(Firstname)
+    #Get the predicted age
+    Age = GetAge(Firstname)
+    #Get the predicted nationalities
+    Nationalities = GetNationalities(Firstname)
+    #Concatenate the data on first name into one
+    ConcatenatedNameDataJSON = ConcatenateNameData(Gender, Age, Nationalities)
+    #Return the concatenated data
+    return ConcatenatedNameDataJSON
+
 #Analayze a first name
 def FirstNameAnalyzer():
     #Ask for user input
@@ -375,14 +388,8 @@ def FirstNameAnalyzer():
         #Name is not valid so tell user
         print("This first name is not valid, can't continue")
     else:
-        #Get the predicted gender
-        Gender = GetGender(Firstname)
-        #Get the predicted age
-        Age = GetAge(Firstname)
-        #Get the predicted nationalities
-        Nationalities = GetNationalities(Firstname)
-        #Concatenate the data on first names into one
-        ConcatenatedNameDataJSON = ConcatenateNameData(Gender, Age, Nationalities)
+        #Concatenate the data on first name into one
+        ConcatenatedNameDataJSON = GetName(Firstname)
         #Print out the data for the user to see their random activity suggestion
         print('Your Analyzed First Name is as Follows: ')
         #Print out concatenated first name data
