@@ -30,12 +30,6 @@ Take away: After creating your script, you will have the ability to access data 
 
 # Notes
 
-`getbored` can be piped to `csvbored.sh`
-
-Example:
-
-`./getbored.sh | ./csvbored.sh`
-
 [main.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/cli/main.py) is the interactive CLI. This uses bash [scripts](https://github.com/RichardDeodutt/bs4apidatamanipulation/tree/main/app/cli/scripts) to access third party apis. 
 
 [app.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/app.py) is the flask app. This uses [main.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/cli/main.py) as a module. 
