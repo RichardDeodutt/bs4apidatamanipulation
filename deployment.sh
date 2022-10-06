@@ -161,9 +161,9 @@ aptinstalllog(){
 #Install the app
 install(){
     #Change directory to the install folder
-    cd $Home/$Pathofvenv/install/
+    cd $Pathofvenv/install/
     #Run the install app script
-    $Home/$Pathofvenv/install/installapp.sh && logokay "Successfully installed the app through a script" || { logerror "Failure installing the app through a script" && exiterror ; }
+    $Pathofvenv/install/installapp.sh && logokay "Successfully installed the app through a script" || { logerror "Failure installing the app through a script" && exiterror ; }
     #Change directory to the home folder
     cd $Home
     #Added the sub script logs to the deployment logs
@@ -173,9 +173,9 @@ install(){
 #Check the status of the deployment
 statuscheck(){
     #Change directory to the install folder
-    cd $Home/$Pathofvenv/install/
+    cd $Pathofvenv/install/
     #Run the status check script
-    $Home/$Pathofvenv/install/statuscheck.sh && logokay "Successfully checked the status through a script" || { logerror "Failure checking the status through a script" && exiterror ; }
+    $Pathofvenv/install/statuscheck.sh && logokay "Successfully checked the status through a script" || { logerror "Failure checking the status through a script" && exiterror ; }
     #Change directory to the home folder
     cd $Home
     #Added the sub script logs to the deployment logs
@@ -193,7 +193,7 @@ main(){
     #Clone the repository
     git clone $RepositoryURL > /dev/null 2>&1 && logokay "Successfully cloned $RepositoryURL" || logwarning "Failure cloning $RepositoryURL"
     #Move the repository folder to the venv folder
-    mv $RepositoryFolder $Pathofvenv > /dev/null 2>&1 && logokay "Successfully moved $RepositoryFolder to $Pathofvenv" || logwarning "Failure moving $RepositoryFolder to $Pathofvenv"
+    mv $RepositoryFolder $Pathofvenv > /dev/null 2>&1 && logokay "Successfully moved $Home/$RepositoryFolder to $Pathofvenv" || logwarning "Failure moving $RepositoryFolder to $Pathofvenv"
     #Install the url-shortener if not already
     install
     #Delay for 10 seconds to load
