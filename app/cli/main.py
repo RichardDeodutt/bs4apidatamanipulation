@@ -109,7 +109,7 @@ def PrintBoredRAWJSON(JSON):
 #Use subprocess to run a bash script to convert the json to csv
 def JSONtoCSV(JSON):
     #Run the bash script and capture the output and return it, bash script takes in a JSON string
-    return subprocess.run(['./jsontocsv.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
+    return subprocess.run(['./scripts/jsontocsv.sh', json.dumps(JSON)], capture_output=True, text=True).stdout
 
 #Format the bored data to be more pretty
 def PrettyBored(OriginalJSON):
