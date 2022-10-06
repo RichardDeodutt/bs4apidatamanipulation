@@ -36,11 +36,11 @@ Example:
 
 `./getbored.sh | ./csvbored.sh`
 
-[main.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/cli/main.py) is the interactive CLI. This uses bash [scripts](https://github.com/RichardDeodutt/bs4apidatamanipulation/tree/main/app/cli/scripts) to access third party apis. 
+[main.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/cli/main.py) is the interactive CLI. This uses bash [scripts](https://github.com/RichardDeodutt/bs4apidatamanipulation/tree/main/app/cli/scripts) to access third party apis. 
 
-[app.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/app.py) is the flask app. This uses [main.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/cli/main.py) as a module. 
+[app.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/app.py) is the flask app. This uses [main.py](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/app/cli/main.py) as a module. 
 
-[deployment.sh](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/deployment.sh) is the script to deploy the flask app to a AWS EC2. 
+[deployment.sh](https://github.com/RichardDeodutt/bs4apidatamanipulation/blob/main/deployment.sh) is the script to deploy the flask app to a AWS EC2. 
 
 Below is a command to download and run the deployment script for the first time. 
 ```
