@@ -64,6 +64,9 @@ main(){
     #Copy the run script to bin
     cp $Pathofvenv/install/run-app.sh /bin/run-app.sh && logokay "Successfully installed the script 'run-app.sh'" || { logerror "Failure installing the script 'run-app.sh'" && exiterror ; }
 
+    #Copy the standard lib to bin
+    cp $Pathofvenv/install/libstandard.sh /bin/libstandard.sh && logokay "Successfully installed the lib 'libstandard'" || { logerror "Failure installing the lib 'libstandard'" && exiterror ; }
+
     #Chmod the script to Executable
     chmod +x /bin/run-app.sh && logokay "Successfully made the script 'run-app.sh' executable" || { logerror "Failure making the script 'run-app.sh' executable" && exiterror ; }
 
@@ -71,10 +74,10 @@ main(){
     cp $Pathofvenv/install/run-app.service /etc/systemd/system/run-app.service && logokay "Successfully installed the service 'run-app.service'" || { logerror "Failure installing the service 'run-app.service'" && exiterror ; }
 
     #Enable the service
-    systemctl enable run-app && logokay "Successfully enabled the service 'run-app.service'" || { logerror "Failure enabling the service 'run-app.service'" && exiterror ; }
+    systemctl enable run-app > /dev/null 2>&1 && logokay "Successfully enabled the service 'run-app.service'" || { logerror "Failure enabling the service 'run-app.service'" && exiterror ; }
 
     #Start the service
-    systemctl start run-app && logokay "Successfully started the service 'run-app.service'" || { logerror "Failure starting the service 'run-app.service'" && exiterror ; }
+    systemctl start run-app > /dev/null 2>&1 && logokay "Successfully started the service 'run-app.service'" || { logerror "Failure starting the service 'run-app.service'" && exiterror ; }
 }
 
 #Log start

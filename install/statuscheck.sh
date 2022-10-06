@@ -21,8 +21,8 @@ main(){
     #Install Screenfetch if not already
     aptinstalllog "screenfetch"
     #Log the Url-Shortener App Status
-    log "$(echo "Url-Shortener App Status")"
-    systemctl status url-shortener --no-pager > /dev/null 2>&1 && log "$(echo ; systemctl status url-shortener --no-pager)" || logwarning "Can't Check the Status of the Url-Shortener App"
+    log "$(echo "Run App Status")"
+    systemctl status run-app --no-pager > /dev/null 2>&1 && log "$(echo ; systemctl status run-app --no-pager)" || logwarning "Can't Check the Status of the Run App"
     #Log Screenfetch
     log "$(echo "Screenfetch" ; screenfetch)"
 }

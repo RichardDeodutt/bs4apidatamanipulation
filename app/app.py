@@ -9,7 +9,7 @@
 from flask import Flask, send_file, jsonify, request
 
 #Import the main.py CLI
-import main
+import cli.main
 
 #Import json for working with JSON
 import json
