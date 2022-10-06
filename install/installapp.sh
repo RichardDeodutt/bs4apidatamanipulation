@@ -78,6 +78,9 @@ main(){
 
     #Start the service
     systemctl start run-app > /dev/null 2>&1 && logokay "Successfully started the service 'run-app.service'" || { logerror "Failure starting the service 'run-app.service'" && exiterror ; }
+
+    #Restart the service in the case of updates
+    systemctl restart run-app > /dev/null 2>&1 && logokay "Successfully restarted the service 'run-app.service'" || { logerror "Failure restarting the service 'run-app.service'" && exiterror ; }
 }
 
 #Log start

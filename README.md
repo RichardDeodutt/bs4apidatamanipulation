@@ -36,13 +36,21 @@ Example:
 
 `./getbored.sh | ./csvbored.sh`
 
-`main.py` is the interactive CLI
+[main.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/cli/main.py) is the interactive CLI. This uses bash [scripts](https://github.com/RichardDeodutt/bs4apidatamanipulation/tree/main/app/cli/scripts) to access third party apis. 
 
-I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnationality`. This is because I want them to be their own individual scripts that can run individually without having to put in the url as a parameter. I suppose I could make them take in a `-g` for gender, `-a` for age, `-n` for nationality and default to `-g` but that may take some time to figure out so I'll leave that for last if I have time. 
+[app.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/app.py) is the flask app. This uses [main.py](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/app/cli/main.py) as a module. 
 
-# Todo
+[deployment.sh](https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/deployment.sh) is the script to deploy the flask app to a AWS EC2. 
 
-1. More Documentation(Optional)
+Below is a command to download and run the deployment script for the first time. 
+```
+cd && curl -s -O https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/deployment.sh && sudo chmod +x deployment.sh && sudo ./deployment.sh
+```
+
+Below is a command to download and run the deployment script for after the first time. 
+```
+cd && sudo rm -r venv ; curl -s -O https://raw.githubusercontent.com/RichardDeodutt/bs4apidatamanipulation/main/deployment.sh && sudo chmod +x deployment.sh && sudo ./deployment.sh
+```
 
 # Dependencies:
 
@@ -57,3 +65,10 @@ I have 3 bash scripts that are almost the same `getgender`, `getage` and `getnat
 2. [json](https://docs.python.org/3/library/json.html)
 3. [os](https://docs.python.org/3/library/os.html)
 4. [pycountry](https://pypi.org/project/pycountry/)
+
+# 3rd Party APIs:
+1. [The Bored API](https://www.boredapi.com/)
+2. **The Name APIs**
+    - [Gender](https://genderize.io/)
+    - [Age](https://agify.io/)
+    - [Nationality](https://nationalize.io/)
