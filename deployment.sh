@@ -191,9 +191,9 @@ main(){
     #Change directory to the home folder
     cd $Home
     #Clone the repository
-    git clone $RepositoryURL > /dev/null 2>&1 && logokay "Successfully cloned $RepositoryURL" || logwarning "Failure cloning $RepositoryURL"
+    git clone $RepositoryURL > /dev/null 2>&1 && logokay "Successfully cloned '$RepositoryURL'" || logwarning "Failure cloning $RepositoryURL"
     #Move the repository folder to the venv folder
-    mv $RepositoryFolder $Pathofvenv > /dev/null 2>&1 && logokay "Successfully moved $Home/$RepositoryFolder to $Pathofvenv" || logwarning "Failure moving $RepositoryFolder to $Pathofvenv"
+    mv $RepositoryFolder $Pathofvenv > /dev/null 2>&1 && logokay "Successfully moved '$Home/$RepositoryFolder' to '$Pathofvenv'" || logwarning "Failure moving $RepositoryFolder to $Pathofvenv"
     #Install the url-shortener if not already
     install
     #Delay for 10 seconds to load

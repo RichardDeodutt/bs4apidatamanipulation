@@ -50,25 +50,25 @@ main(){
     source $Pathofvenv/bin/activate && logokay "Successfully activated the python venv directory" || { logerror "Failure activating the python venv directory" && exiterror ; }
 
     #Install the python module flask
-    pip install flask && logokay "Successfully installed the python module flask" || { logerror "Failure installing the python module flask" && exiterror ; }
+    pip install flask > /dev/null 2>&1 && logokay "Successfully installed the python module flask" || { logerror "Failure installing the python module flask" && exiterror ; }
     
     #Install the python module pycountry
-    pip install pycountry && logokay "Successfully installed the python module pycountry" || { logerror "Failure installing the python module pycountry" && exiterror ; }
+    pip install pycountry > /dev/null 2>&1 && logokay "Successfully installed the python module pycountry" || { logerror "Failure installing the python module pycountry" && exiterror ; }
 
     #Install the python module gunicorn
-    pip install gunicorn && logokay "Successfully installed the python module gunicorn" || { logerror "Failure installing the python module gunicorn" && exiterror ; }
+    pip install gunicorn > /dev/null 2>&1 && logokay "Successfully installed the python module gunicorn" || { logerror "Failure installing the python module gunicorn" && exiterror ; }
 
     #Deactivate the venv
     deactivate && logokay "Successfully deactivated the python venv directory" || { logerror "Failure deactivating the python venv directory" && exiterror ; }
 
     #Copy the run script to bin
-    cp $Home/$Pathofvenv/install/run-app.sh /bin/run-app.sh && logokay "Successfully installed the script 'run-app.sh'" || { logerror "Failure installing the script 'run-app.sh'" && exiterror ; }
+    cp $Pathofvenv/install/run-app.sh /bin/run-app.sh && logokay "Successfully installed the script 'run-app.sh'" || { logerror "Failure installing the script 'run-app.sh'" && exiterror ; }
 
     #Chmod the script to Executable
     chmod +x /bin/run-app.sh && logokay "Successfully made the script 'run-app.sh' executable" || { logerror "Failure making the script 'run-app.sh' executable" && exiterror ; }
 
     #Copy the systemd service to the rest of the services
-    cp $Home/$Pathofvenv/install/run-app.service /etc/systemd/system/run-app.service && logokay "Successfully installed the service 'run-app.service'" || { logerror "Failure installing the service 'run-app.service'" && exiterror ; }
+    cp $Pathofvenv/install/run-app.service /etc/systemd/system/run-app.service && logokay "Successfully installed the service 'run-app.service'" || { logerror "Failure installing the service 'run-app.service'" && exiterror ; }
 
     #Enable the service
     systemctl enable run-app && logokay "Successfully enabled the service 'run-app.service'" || { logerror "Failure enabling the service 'run-app.service'" && exiterror ; }
