@@ -1,33 +1,17 @@
 #!/bin/bash
 
 #Richard Deodutt
-#09/15/2022
-#This script is meant to deploy the whole app when put in a ec2 userdata for the creation. Port is 80 so no port and it should be http
-#Requires Python, Bash, cURL, jq, Python Modules: subprocess, json, os, pycountry
+#09/23/2022
+#This script is meant to have standard functions for ubuntu
 
 #Home directory
-Home='/home/ubuntu'
+Home=$HOME
 
 #Log file name
-LogFileName="Deployment.log"
+LogFileName="Standard.log"
 
 #Log file location and name
 LogFile=$Home/$LogFileName
-
-#The Url of the repository to clone
-RepositoryURL='https://github.com/RichardDeodutt/bs4apidatamanipulation.git'
-
-#The folder of the repository
-RepositoryFolder='bs4apidatamanipulation'
-
-#Path of the venv
-Pathofvenv=$Home/"venv"
-
-#Set the LogFile variable
-setlogs(){
-    #Combine Home and Logfilename
-    LogFile=$Home/$LogFileName
-}
 
 #Color output, don't change
 Red='\033[0;31m'
@@ -35,6 +19,12 @@ Green='\033[0;32m'
 Yellow='\033[0;33m'
 #No color output, don't change
 NC='\033[0m'
+
+#Set the LogFile variable
+setlogs(){
+    #Combine Home and Logfilename
+    LogFile=$Home/$LogFileName
+}
 
 #function to get a timestamp
 timestamp(){
@@ -117,7 +107,7 @@ logerror(){
 #Function to exit with a error code
 exiterror(){
     #Log error
-    logerror "Something went wrong with the deployment. exiting"
+    logerror "Something went wrong with the installation. exiting"
     #Exit with error
     exit 1
 }
@@ -158,61 +148,7 @@ aptinstalllog(){
     DEBIAN_FRONTEND=noninteractive apt-get install $Pkg -y > /dev/null 2>&1 && logokay "Successfully installed $Pkg" || { logerror "Failure installing $Pkg" && exiterror ; }
 }
 
-#Install the app
-install(){
-    #Change directory to the install folder
-    cd $Home/$Pathofvenv/install/
-    #Run the install app script
-    $Home/$Pathofvenv/install/installapp.sh && logokay "Successfully installed the app through a script" || { logerror "Failure installing the app through a script" && exiterror ; }
-    #Change directory to the home folder
-    cd $Home
-    #Added the sub script logs to the deployment logs
-    cat InstallApp.log >> $LogFile
-}
-
-#Check the status of the deployment
-statuscheck(){
-    #Change directory to the install folder
-    cd $Home/$Pathofvenv/install/
-    #Run the status check script
-    $Home/$Pathofvenv/install/statuscheck.sh && logokay "Successfully checked the status through a script" || { logerror "Failure checking the status through a script" && exiterror ; }
-    #Change directory to the home folder
-    cd $Home
-    #Added the sub script logs to the deployment logs
-    cat StatusCheck.log >> $LogFile
-}
-
-#The main function
-main(){
-    #Update local apt repo database
-    aptupdatelog
-    #Install git if not already
-    aptinstalllog "git"
-    #Change directory to the home folder
-    cd $Home
-    #Clone the repository
-    git clone $RepositoryURL > /dev/null 2>&1 && logokay "Successfully cloned $RepositoryURL" || logwarning "Failure cloning $RepositoryURL"
-    #Move the repository folder to the venv folder
-    mv $RepositoryFolder $Pathofvenv > /dev/null 2>&1 && logokay "Successfully moved $RepositoryFolder to $Pathofvenv" || logwarning "Failure moving $RepositoryFolder to $Pathofvenv"
-    #Install the url-shortener if not already
-    install
-    #Delay for 10 seconds to load
-    sleep 10
-    #Status check
-    statuscheck
-}
-
-#Log start
-logokay "Running the deployment script"
-
-#Check for admin permissions
-admincheck
-
-#Call the main function
-main
-
-#Log successs
-logokay "Successfully ran the deployment script"
-
-#Exit successs
-exit 0
+#Don't Log successs as it goes to the Standard.log
+#logokay "Successfully imported standard"
+#No exit successs as it breaks import
+#exit 0

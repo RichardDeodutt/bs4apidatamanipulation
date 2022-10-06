@@ -71,13 +71,13 @@ def Pick(Prompt, Options):
         return list(Options.keys())[UserSelection]
 
 #Welcome the user and get some information from them if needed
-def Welcome():
+def Welcome(*args):
     #Welcome message, API Data Manipulation
     print("Welcome to ADM - API Data Manipulation")
     return None
 
 #Exits the program
-def Exit():
+def Exit(*args):
     #Confirm the user wants to exit
     if not YNPromt('Are you sure you want to exit?'):
         return None
@@ -196,12 +196,12 @@ def SavetoBoredCSV(OriginalJSON):
     return AlreadySavedData
 
 #Use subprocess to run a bash script to use the bored api
-def GetBored():
+def GetBored(*args):
     #Run the bash script and capture the output and return it
-    return subprocess.run(['./getbored.sh'], capture_output=True, text=True).stdout
+    return subprocess.run(['./scripts/getapires.sh', '-b'], capture_output=True, text=True).stdout
 
 #User is bored so get them a random activity suggestion
-def Bored():
+def Bored(*args):
     #Tell the user what we will do
     print('Let me suggest a random activity you can do then!')
     #Subprocess call to the bash script to get a random activity suggestion using a api and curl
@@ -213,7 +213,7 @@ def Bored():
     #Print out bored api data
     PrettyPrintBoredJSON(ActivityJSON)
     #Options on what to do with this data
-    Options = { "Pretty Print Bored Data": PrettyPrintBoredJSON, "Print All Bored Data": PrintBoredRAWJSON, "Print Raw JSON Bored Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBoredCSV, "Go Back": None }
+    Options = { "Pretty Print Bored Data": PrettyPrintBoredJSON, "Print All Bored Data": PrintBoredRAWJSON, "Print Raw JSON Bored Data": PrintRAWJSON, 'Save to Bored.csv': SavetoBoredCSV, "Go Back": None, "Exit": Exit }
     #Infinite Loop
     while True:
         #Space out text for clarity
@@ -235,17 +235,17 @@ def Bored():
 #Get most likely gender from a first name using genderize api
 def GetGender(Firstname):
     #Run the bash script and capture the output and return it
-    return subprocess.run(['./getgender.sh', Firstname], capture_output=True, text=True).stdout
+    return subprocess.run(['./scripts/getapires.sh', '-g', Firstname], capture_output=True, text=True).stdout
 
 #Get most likely age from a first name using agify api
 def GetAge(Firstname):
     #Run the bash script and capture the output and return it
-    return subprocess.run(['./getage.sh', Firstname], capture_output=True, text=True).stdout
+    return subprocess.run(['./scripts/getapires.sh', '-a', Firstname], capture_output=True, text=True).stdout
 
 #Get most likely Nationalities from a first name using nationalize api
 def GetNationalities(Firstname):
     #Run the bash script and capture the output and return it
-    return subprocess.run(['./getnationality.sh', Firstname], capture_output=True, text=True).stdout
+    return subprocess.run(['./scripts/getapires.sh', '-n', Firstname], capture_output=True, text=True).stdout
 
 #Concatenate the data on first names into one JSON string
 def ConcatenateNameData(Gender, Age, Nationalities):
@@ -385,7 +385,7 @@ def GetName(Firstname):
     return ConcatenatedNameDataJSON
 
 #Analayze a first name
-def FirstNameAnalyzer():
+def FirstNameAnalyzer(*args):
     #Ask for user input
     Firstname = input("Enter a first name to analyze (Only letters): ")
     #Don't accept blank input or non letter characters in the input
@@ -400,7 +400,7 @@ def FirstNameAnalyzer():
         #Print out concatenated first name data
         PrettyPrintNameJSON(ConcatenatedNameDataJSON)
         #Options on what to do with this data
-        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print All Name Data": PrintBoredRAWJSON, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': SavetoNameCSV, "Go Back": None }
+        Options = { "Pretty Print Name Data": PrettyPrintNameJSON, "Print All Name Data": PrintBoredRAWJSON, "Print Raw JSON Name Data": PrintRAWJSON, 'Save to Name.csv': SavetoNameCSV, "Go Back": None, "Exit": Exit }
         #Infinite Loop
         while True:
             #Space out text for clarity
@@ -420,7 +420,7 @@ def FirstNameAnalyzer():
                 Options[Selection] = Options[Selection](ConcatenatedNameDataJSON)
 
 #Main menu of options the user can do
-def Menu():
+def Menu(*args):
     #Dictionary of options where each entry is a funtion that can be run
     Options = { "I'm Bored": Bored, "Analyze a First Name": FirstNameAnalyzer, "Exit": Exit }
     #Infinte Loop
@@ -437,7 +437,7 @@ def Menu():
         Options[Selection] = Options[Selection]()
 
 #The main program
-def main():
+def main(*args):
     #Welcome the user
     Welcome()
     #Send the user to the main menu
